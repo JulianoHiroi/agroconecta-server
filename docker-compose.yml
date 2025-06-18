@@ -1,20 +1,18 @@
-# Faça um arquivo docker subir um container Posgres com as seguintes configurações:
-#DB_NAME="userSystem"
-#DB_USER="postgres"
-#DB_PASSWORD="ndacps16"
-#DB_HOST="localhost"
-#DB_PORT="5432"
-
-version: '3.1'
+version: '3.8'
 
 services:
   db:
-    image: postgres
+    image: postgres:15  # Versão explícita recomendada
+    container_name: postgres-db
     environment:
       POSTGRES_DB: userSystem
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ndacps16
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
-      
+volumes:
+  postgres_data:

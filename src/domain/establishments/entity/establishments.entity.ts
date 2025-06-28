@@ -31,6 +31,8 @@ class Establishments {
   id: string;
   name: string;
   logradouro: string;
+  latitue: number;
+  longitude: number;
   number: string;
   CEP: string;
   phone: string;
@@ -42,6 +44,8 @@ class Establishments {
     this.id = id ? id : randomUUID();
     this.name = props.name;
     this.logradouro = props.logradouro;
+    this.latitue = props.latitue;
+    this.longitude = props.longitude;
     this.number = props.number;
     this.CEP = props.CEP;
     this.phone = props.phone;

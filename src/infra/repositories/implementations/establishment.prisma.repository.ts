@@ -25,6 +25,8 @@ class EstablishmentPrismaRepository implements EstablishmentRepository {
             data: {
                 name: establishment.name,
                 logradouro: establishment.logradouro,
+                latitue: establishment.latitue,
+                longitude: establishment.longitude,
                 number: establishment.number,
                 CEP: establishment.CEP,
                 phone: establishment.phone,
@@ -37,6 +39,8 @@ class EstablishmentPrismaRepository implements EstablishmentRepository {
             id: newEstablishment.id,
             name: newEstablishment.name,
             logradouro: newEstablishment.logradouro,
+            latitue: newEstablishment.latitue,
+            longitude: newEstablishment.longitude,
             number: newEstablishment.number,
             CEP: newEstablishment.CEP,
             phone: newEstablishment.phone,
@@ -45,7 +49,6 @@ class EstablishmentPrismaRepository implements EstablishmentRepository {
     }
     async connectImageToEstablishment(
         data: { establishmentId: string; imageUrl: string },
-        userId: string
     ): Promise<ConnectImageToEstablishmentsResponseDTO> {
         const newImage = await prisma.establishmentsImages.create({
             data: {
@@ -60,6 +63,83 @@ class EstablishmentPrismaRepository implements EstablishmentRepository {
             establishmentId: newImage.establishmentId,
         };
     }
+    async findById(id: string): Promise<CreateEstablishmentResponseDTO | null> {
+        const establishment = await prisma.establishments.findUnique({
+            where: { id },
+        });
+
+        if (!establishment) {
+            return null;
+        }
+
+        return {
+            id: establishment.id,
+            name: establishment.name,
+            logradouro: establishment.logradouro,
+            latitue: establishment.latitue,
+            longitude: establishment.longitude,
+            number: establishment.number,
+            CEP: establishment.CEP,
+            phone: establishment.phone,
+            description: establishment.description ?? undefined,
+        };
+    }
+    
+    async update(
+        id: string,
+        data: Partial<CreateEstablishmentRequestDTO>,
+    ): Promise<CreateEstablishmentResponseDTO> {
+        const updatedEstablishment = await prisma.establishments.update({
+            where: { id },
+            data: {
+                name: data.name,
+                logradouro: data.logradouro,
+                latitue: data.latitue,
+                longitude: data.longitude,
+                number: data.number,
+                CEP: data.CEP,
+                phone: data.phone,
+                description: data.description,
+            },
+        });
+
+        return {
+            id: updatedEstablishment.id,
+            name: updatedEstablishment.name,
+            logradouro: updatedEstablishment.logradouro,
+            latitue: updatedEstablishment.latitue,
+            longitude: updatedEstablishment.longitude,
+            number: updatedEstablishment.number,
+            CEP: updatedEstablishment.CEP,
+            phone: updatedEstablishment.phone,
+            description: updatedEstablishment.description ?? undefined,
+        };
+    }
+
+    async findAllByUserId(userId: string): Promise<CreateEstablishmentResponseDTO[]> {
+        const establishments = await prisma.establishments.findMany({
+            where: { idUser: userId },
+        });
+
+        return establishments.map(establishment => ({
+            id: establishment.id,
+            name: establishment.name,
+            logradouro: establishment.logradouro,
+            latitue: establishment.latitue,
+            longitude: establishment.longitude,
+            number: establishment.number,
+            CEP: establishment.CEP,
+            phone: establishment.phone,
+            description: establishment.description ?? undefined,
+        }));
+    }
+    
+    async delete(id: string): Promise<void> {
+        await prisma.establishments.delete({
+            where: { id },
+        });
+    }
+
 
 }
 

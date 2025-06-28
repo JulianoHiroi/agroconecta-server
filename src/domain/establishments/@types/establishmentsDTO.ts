@@ -27,6 +27,8 @@ export type CreateEstablishmentRequestDTO = {
   name: string;
   logradouro: string;
   number: string;
+  latitue?: number;
+  longitude?: number;
   CEP: string;
   phone: string;
   description?: string;
@@ -36,6 +38,8 @@ export type CreateEstablishmentResponseDTO = {
   id: string;
   name: string;
   logradouro: string;
+  latitue: number;
+  longitude: number;
   number: string;
   CEP: string;
   phone: string;
@@ -52,3 +56,30 @@ export type ConnectImageToEstablishmentsResponseDTO = {
   urlImage: string;
   establishmentId: string;
 };
+
+
+export type UpdateEstablishmentRequestDTO = {
+  id: string;
+  name?: string;
+  logradouro?: string;
+  latitue?: number;
+  longitude?: number;
+  number?: string;
+  CEP?: string;
+  phone?: string;
+  description?: string;
+  userId?: string;
+};
+
+export type UpdateEstablishmentResponseDTO = {
+  id: string;
+  name: string;
+  logradouro: string;
+  latitue: number;
+  longitude: number;
+  number: string;
+  CEP: string;
+  phone: string;
+  description?: string;
+};
+

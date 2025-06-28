@@ -29,4 +29,29 @@ establishmentRoutes.patch(
     establishmentController.connectImageToEstablishment.bind(establishmentController)
 );
 
+establishmentRoutes.patch(
+    "/:id",
+    authMiddleware.auth.bind(authMiddleware),
+    establishmentController.updateEstablishment.bind(establishmentController)
+);
+
+establishmentRoutes.get(
+    "/",
+    authMiddleware.auth.bind(authMiddleware),
+    establishmentController.getAllEstablishmentsByUserId.bind(establishmentController)
+);
+
+establishmentRoutes.get(
+    "/:id",
+    authMiddleware.auth.bind(authMiddleware),
+    establishmentController.findById.bind(establishmentController)
+);
+
+establishmentRoutes.delete(
+    "/:id",
+    authMiddleware.auth.bind(authMiddleware),
+    establishmentController.delete.bind(establishmentController)
+);
+
+
 export default establishmentRoutes;

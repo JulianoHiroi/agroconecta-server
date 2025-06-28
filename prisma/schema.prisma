@@ -52,6 +52,9 @@ model Establishments {
   logradouro           String
   number               String
   CEP                  String
+  // preciso dos dados latitude e longitude que são double
+  latitue              Float                  @default(0)
+  longitude            Float                  @default(0)
   phone                String
   description          String?
   idUser               String

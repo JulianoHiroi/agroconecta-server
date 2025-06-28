@@ -20,10 +20,17 @@ class RecoveryPasswordUseCase {
     if (!this.emailService.verifyConnection()) {
       throw new EmailError("connectionError");
     }
-    const token = this.tokenService.sign({ id: user.id }, { expiresIn: "1d" });
+   // Gerar código de recuperação que tenha 6 digitos
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-    const recoveryLink = `https://usersystem-web-app-p2bi.vercel.app/recovery-password/${token}`;
-
+    const codeCreate = await this.userRepository.createRecoveryCode({
+      email: email,
+      code: code,
+      expiration: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 horas
+    });
+    if (!codeCreate) {
+      throw new UserError("errorCreateCode");
+    }
     this.emailService.sendEmail({
       to: user.email,
       subject: "Recuperação de senha - UserSystem",
@@ -32,7 +39,8 @@ class RecoveryPasswordUseCase {
         Você está recebendo este email porque utilizou a opção para recuperar a sua senha do UserSystem. Se você não solicitou uma alteração de senha, ignore este email.
         <br />
         <br />
-        Clique <a href=${recoveryLink}>aqui</a> para alterar a sua senha.
+        O Código de recuperação é ${code} válido por 24 horas.
+        <br />
       </p>`,
     });
   }

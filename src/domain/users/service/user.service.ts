@@ -20,6 +20,7 @@ abstract class UserService {
   abstract getUserByEmail(email: string): Promise<getUserResponseDTO>;
   abstract recoveryPassword(email: string): Promise<void>;
   abstract changePassword(data: changePasswordDTO): Promise<void>;
+  abstract validateCode(email: string, code: string): Promise<string>;
 }
 
 export default UserService;

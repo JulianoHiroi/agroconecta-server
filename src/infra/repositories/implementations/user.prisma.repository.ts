@@ -1,6 +1,7 @@
 import {
   FindUserDTO,
   updateUserDTO,
+  RecoverCodeDTO,
 } from "../../../domain/users/@types/userDTO";
 import UserRepository from "../user.repository";
 
@@ -71,6 +72,49 @@ class UserPrismaRepository implements UserRepository {
   async findAll(): Promise<User[]> {
     const users = await prisma.user.findMany({ include: { projects: true } });
     return users;
+  }
+
+  async createRecoveryCode(data: RecoverCodeDTO): Promise<string> {
+    // Verifica se o código já existe para o email
+    const existingCode = await prisma.recoveryPasswordCode.findFirst({
+      where: {
+        email: data.email,
+      },
+    });
+    // Se já existir, deleta e cria um novo
+    if (existingCode) {
+      await prisma.recoveryPasswordCode.delete({
+        where: {
+          id: existingCode.id,
+        },
+      });
+    }
+    // Cria o código de recuperação
+    const recoveryCode = await prisma.recoveryPasswordCode.create({
+      data: {
+        email: data.email,
+        code: data.code,
+        expiresAt: data.expiration,
+      },
+
+    });
+    return recoveryCode.code;
+  }
+
+  async findRecoveryCode(email: string): Promise<RecoverCodeDTO | null> {
+    const recoveryCode = await prisma.recoveryPasswordCode.findFirst({
+      where: {
+        email: email,
+      },
+    });
+    if (!recoveryCode) {
+      return null;
+    }
+    return {
+      email: recoveryCode.email,
+      code: recoveryCode.code,
+      expiration: recoveryCode.expiresAt,
+    };
   }
 }
 

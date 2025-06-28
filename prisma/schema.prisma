@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id            String        @id @default(uuid())
-  email         String        @unique
-  name          String
-  date_of_birth DateTime
-  gender        String
-  password      String
-  projects      UserProject[]
+  id             String           @id @default(uuid())
+  email          String           @unique
+  name           String
+  date_of_birth  DateTime
+  gender         String
+  password       String
+  projects       UserProject[]
+  Establishments Establishments[]
 }
 
 model Project {
@@ -35,4 +36,32 @@ model UserProject {
   role      String
 
   @@id([userId, projectId])
+}
+
+model RecoveryPasswordCode {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  code      String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model Establishments {
+  id                   String                 @id @default(uuid())
+  name                 String
+  logradouro           String
+  number               String
+  CEP                  String
+  phone                String
+  description          String?
+  idUser               String
+  user                 User                   @relation(fields: [idUser], references: [id])
+  EstablishmentsImages EstablishmentsImages[]
+}
+
+model EstablishmentsImages {
+  id              String         @id @default(uuid())
+  urlImage        String
+  establishmentId String
+  establishment   Establishments @relation(fields: [establishmentId], references: [id])
 }

@@ -34,8 +34,12 @@ userRoutes.post(
   "/recoverypassword",
   userController.recoveryPassword.bind(userController)
 );
+userRoutes.post(
+  "/validaterecoverycode",
+  userController.validateRecoveryCode.bind(userController)
+);
 userRoutes.patch(
-  "/changepassword", authMiddleware.auth.bind(authMiddleware),
+  "/changepassword",
   userController.changePassword.bind(userController)
 );
 userRoutes.patch("/:id", authMiddleware.auth.bind(authMiddleware), userController.updateUser.bind(userController));
@@ -43,9 +47,8 @@ userRoutes.delete("/",
   authMiddleware.auth.bind(authMiddleware),
   userController.deleteUser.bind(userController));
 
-/*
+
 userRoutes.get("/", userController.getAllUsers.bind(userController));
 
-*/
 
 export default userRoutes;

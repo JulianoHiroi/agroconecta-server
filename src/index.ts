@@ -7,6 +7,9 @@ import cors from "cors";
 const prisma = new PrismaClient();
 
 import { errorMiddleware } from "./infra/polices/error/error.middleware";
+import establishmentRoutes from "./infra/routes/establishment.routes";
+import path from "path";
+import imageRoutes from "./infra/routes/image.routes";
 
 prisma.$connect().then(() => {
   console.log("Connected to database");
@@ -19,7 +22,8 @@ prisma.$connect().then(() => {
 
   app.use("/api/users", userRoutes);
   app.use("/api/projects", projectRoutes);
-  // Este middleware será chamado antes do middleware de erro
+  app.use("/api/establishments", establishmentRoutes);
+  app.use("/api/assets", imageRoutes); // Serve images from the assets directory
   app.use(errorMiddleware);
   app.listen(4000, () => {
     console.log("Server is running on port 4000");

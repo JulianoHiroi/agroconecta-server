@@ -8,6 +8,8 @@ type nameUserError =
   | "alreadyExists"
   | "invalidToken"
   | "invalidCredentials"
+  | "errorCreateCode"
+  | "invalidCodeOrEmail";
 
 const schemaError = {
   notFound: {
@@ -46,12 +48,23 @@ const schemaError = {
     statusCode: 401,
     message: "Invalid credentials",
   },
+  errorCreateCode: {
+    statusCode: 500,
+    message: "Error creating recovery code",  
+  },
+  invalidCodeOrEmail: {
+    statusCode: 400,
+    message: "Invalid code or email",
+  },
+
 };
 class UserError extends Error {
   public readonly nameError: nameUserError;
   public readonly statusCode: number;
+  
   constructor(nameError: nameUserError) {
     super(schemaError[nameError].message);
+    console.log(schemaError[nameError].message);
     this.nameError = nameError;
     this.statusCode = schemaError[nameError].statusCode;
   }

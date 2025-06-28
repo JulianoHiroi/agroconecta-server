@@ -36,6 +36,7 @@ class UserController {
   }
   async signUp(request: Request, response: Response) {
     const { name, email, password, gender, date_of_birth } = request.body;
+    console.log( request.body);
     if (date_of_birth === undefined || date_of_birth === null) {
       throw new UserError("invalidDateBirth");
     }
@@ -46,7 +47,7 @@ class UserController {
       gender: gender,
       date_of_birth: new Date(date_of_birth),
     });
-
+    console.log(token);
     // Adicionar esta linha para enviar o token na resposta
     return response.status(200).json(token);
   }
@@ -82,6 +83,15 @@ class UserController {
     const userId = request.userId;
     if (userId === undefined) throw new UserError("invalidToken");
     return response.status(200).json({ userId });
+  }
+
+  async validateRecoveryCode(request: Request, response: Response) {
+    const { code, email } = request.body;
+    if (!code || !email) {
+      throw new UserError("invalidCodeOrEmail");
+    }
+    const token = await this.userService.validateCode(code, email);
+    return response.status(200).json({ token });
   }
 }
 export default UserController;

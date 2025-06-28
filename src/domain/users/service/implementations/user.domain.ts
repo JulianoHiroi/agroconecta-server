@@ -15,6 +15,7 @@ import UserService from "../user.service";
 import RecoveryPasswordUseCase from "../../usecases/recoveryPassword.usecase";
 import { NodeMailerMailService } from "../../../../infra/providers/email/implementations/nodemailer.service";
 import ChangePasswordUseCase from "../../usecases/changePassword.usecase";
+import ValidadeCodeUserUseCase from "../../usecases/valideCodeUser.usecase";
 
 const userRepository = new PrismaRepository();
 const hashServiceBcrypt = new HashServiceBcryp();
@@ -57,6 +58,11 @@ class UserDomainService implements UserService {
       tokenServiceJWT,
       hashServiceBcrypt
     );
+
+  private validateCodeUseCase: ValidadeCodeUserUseCase = new ValidadeCodeUserUseCase(
+    userRepository,
+    tokenServiceJWT
+  );
 
   async getUser(id: string): Promise<getUserResponseDTO> {
     const user = await this.getUserUseCase.execute(id);
@@ -109,6 +115,11 @@ class UserDomainService implements UserService {
   }
   async changePassword(data: { token: string; password: string }) {
     await this.changePasswordUseCase.execute(data);
+  }
+
+  async validateCode(email: string, code: string): Promise<string> {
+    const token = await this.validateCodeUseCase.execute(email, code);
+    return token;
   }
 }
 export default UserDomainService;

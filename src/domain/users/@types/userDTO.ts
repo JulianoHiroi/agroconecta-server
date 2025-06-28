@@ -33,6 +33,12 @@ export type updateUserDTO = {
   password?: string;
 };
 
+export type RecoverCodeDTO = {
+  email: string;
+  code: string;
+  expiration: Date;
+};
+
 export type FindUserDTO = {
   id?: string;
   email?: string;

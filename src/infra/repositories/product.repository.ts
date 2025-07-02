@@ -1,4 +1,4 @@
-import { ConnectProductToEstablishmentResponseDTO, ConnectProductToEstablishmentRequestDTO, CreateProductDTO, CreateProductResponseDTO, UpdateProductDTO, UpdateProductResponseDTO } from "../../domain/products/@types/productsDTO";
+import { ConnectProductToEstablishmentResponseDTO, ConnectProductToEstablishmentRequestDTO, CreateProductDTO, CreateProductResponseDTO, UpdateProductDTO, UpdateProductResponseDTO } from "../../domain/product/types/productDTO";
 
 abstract class ProductRepository {
     abstract createProduct(data: CreateProductDTO): Promise<CreateProductResponseDTO>;

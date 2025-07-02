@@ -11,11 +11,12 @@ import establishmentRoutes from "./infra/routes/establishment.routes";
 import path from "path";
 import imageRoutes from "./infra/routes/image.routes";
 import productRoutes from "./infra/routes/product.routes";
+import orderRoutes from "./infra/routes/order.routes";
 
 prisma.$connect().then(() => {
   console.log("Connected to database");
   const app = express();
-  app.use(cors()); 
+  app.use(cors());
   app.use(express.json());
   app.get("/api", (req, res) => {
     res.send("Hello World");
@@ -26,8 +27,7 @@ prisma.$connect().then(() => {
   app.use("/api/establishments", establishmentRoutes);
   app.use("/api/assets", imageRoutes); // Serve images from the assets directory
   app.use("/api/products", productRoutes);
+  app.use("/api/orders", orderRoutes);
   app.use(errorMiddleware);
-  app.listen(4000, () => {
-    console.log("Server is running on port 4000");
-  });
+  app.listen(4000, '0.0.0.0', () => console.log('Servidor rodando...'));
 });

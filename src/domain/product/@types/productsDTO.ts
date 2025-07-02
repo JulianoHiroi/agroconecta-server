@@ -27,7 +27,8 @@ export type CreateProductResponseDTO = {
   price: number;
   name: string;
   description: string;
-  idTypeProduct: string; 
+  idTypeProduct: string;
+  avaliationRating?: number; // Optional field for average rating 
 }
 
 export type UpdateProductDTO = {
@@ -51,9 +52,9 @@ export type DeleteProductDTO = {
 }
 
 export type ConnectProductToEstablishmentRequestDTO = {
-    establishmentId: string;
-    productId: string;
-    quantity: number;
+  establishmentId: string;
+  productId: string;
+  quantity: number;
 }
 
 export type ConnectProductToEstablishmentResponseDTO = {

@@ -3,12 +3,12 @@ import { ConnectProductToEstablishmentRequestDTO, ConnectProductToEstablishmentR
 
 
 abstract class ProductService {
-  constructor() {}
+  constructor() { }
 
   abstract createProduct(
     data: CreateProductDTO
   ): Promise<CreateProductResponseDTO>;
- 
+
   abstract getTypesProducts(): Promise<{ id: string; name: string }[]>;
 
   abstract updateProduct(
@@ -32,6 +32,10 @@ abstract class ProductService {
     productId: string
   ): Promise<void>;
 
-
+  abstract makeAvaliation(
+    productId: string,
+    userId: string,
+    rating: number,
+  ): Promise<void>;
 }
 export default ProductService;

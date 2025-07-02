@@ -22,6 +22,8 @@ model User {
   Product             Product[]
   ordersMade          Order[]          @relation("OrderUserMake")
   ordersAsProductUser Order[]          @relation("OrderUserProduct")
+  Payment             Payment[]
+  Avaliation          Avaliation[]
 }
 
 model Project {
@@ -88,6 +90,7 @@ model Product {
   Establishments          Establishments?           @relation(fields: [establishmentsId], references: [id])
   establishmentsId        String?
   Order                   Order[]
+  Avaliation              Avaliation[]
 }
 
 model TypeProduct {
@@ -122,14 +125,15 @@ model Order {
   // Produto e estabelecimento
   productId              String
   product                Product                 @relation(fields: [productId], references: [id])
-  EstablishmentId        String
-  Establishment          Establishments          @relation(fields: [EstablishmentId], references: [id])
-  EstablishmentProductId String
-  EstablishmentProduct   Establishments_Products @relation(fields: [EstablishmentProductId], references: [id])
+  establishmentId        String
+  Establishment          Establishments          @relation(fields: [establishmentId], references: [id])
+  establishmentProductId String
+  EstablishmentProduct   Establishments_Products @relation(fields: [establishmentProductId], references: [id])
 
-  quantity Int
-  statusId Int         @default(1)
-  status   StatusOrder @relation(fields: [statusId], references: [id])
+  quantity     Int
+  amoutPayment Float       @default(0)
+  statusId     Int         @default(1)
+  status       StatusOrder @relation(fields: [statusId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -147,7 +151,20 @@ model Payment {
   id        String   @id @default(uuid())
   orderId   String
   order     Order    @relation(fields: [orderId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   amount    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Avaliation {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  rating    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

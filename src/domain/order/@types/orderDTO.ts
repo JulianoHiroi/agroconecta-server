@@ -34,22 +34,31 @@ odel Order {
 
 export type CreateOrderDTO = {
   userId: string;
-  userProductId: string;
   productId: string;
   establishmentId: string;
-  establishmentProductId: string;
   quantity: number;
   statusId?: number; // Default to 1 if not provided
 };
 export type CreateOrderResponseDTO = {
   id: string;
+};
+
+export type GetAllOrderDTO = {
   userId: string;
-  userProductId: string;
+};
+
+export type GetOrderResponseDTO = {
+  id: string;
   productId: string;
   establishmentId: string;
-  establishmentProductId: string;
   quantity: number;
-  statusId?: number; // Default to 1 if not provided
+  statusId: number;
+  statusName: string;
   createdAt: Date;
   updatedAt: Date;
+  productName: string;
+  amoutPayment: number;
+  establishmentName: string;
+  userId: string;
+  userProductId: string;
 };

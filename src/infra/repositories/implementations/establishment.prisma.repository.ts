@@ -95,31 +95,62 @@ class EstablishmentPrismaRepository implements EstablishmentRepository {
                 },
             },
         });
+        // faz a busca das avaliações para cada produto e calcula a média de avaliações
+        const AvaliationsProducts = await prisma.avaliation.findMany({
+            where: {
+                productId: {
+                    in: products.map(product => product.product.id),
+                },
+            },
+            select: {
+                productId: true,
+                rating: true,
+            },
+        });
+        // Faz o calculo da média dos valorede de rating das avaliações
+        const averageRatings = AvaliationsProducts.reduce((acc: {
+            [productId: string
+            ]: { total: number; count: number }
+        }, avaliation) => {
+            if (!acc[avaliation.productId]) {
+                acc[avaliation.productId] = { total: 0, count: 0 };
+            }
+            acc[avaliation.productId].total += avaliation.rating;
+            acc[avaliation.productId].count += 1;
+            return acc;
+        }, {});
+
         return {
             id: establishment.id,
             name: establishment.name,
             logradouro: establishment.logradouro,
             latitue: establishment.latitue,
             longitude: establishment.longitude,
-            imageProfileUrl: establishment.urlImageProfile ?? undefined,
             number: establishment.number,
             CEP: establishment.CEP,
             phone: establishment.phone,
             description: establishment.description ?? undefined,
+            imageProfileUrl: establishment.urlImageProfile ?? undefined,
             images: images.map(image => ({
                 id: image.id,
                 url: image.urlImage,
             })),
-            products: products.map(product => ({
-                id: product.product.id,
-                price: product.product.price,
-                description: product.product.description,
-                idTypeProduct: product.product.idTypeProduct,
-                name: product.product.typeProduct.name,
-                quantity: product.quantity, // Assuming you want to return the quantity as well
-                // Assuming you want to return the name of the type product
-            })),
+            products: products.map(ep => {
+                const ratingData = averageRatings[ep.product.id];
+                const avaliationRating = ratingData ? ratingData.total / ratingData.count : undefined;
+                return {
+                    id: ep.product.id,
+                    price: ep.product.price,
+                    description: ep.product.description,
+                    idTypeProduct: ep.product.idTypeProduct,
+                    name: ep.product.typeProduct.name, // Assuming you want to return the name of the type product
+                    quantity: ep.quantity ?? 0, // Assuming quantity is a field in Establishments_Products
+                    ratingAvaliation: avaliationRating, // Optional field for average rating
+                };
+            }),
         };
+
+
     }
 
     async update(
@@ -263,7 +294,7 @@ class EstablishmentPrismaRepository implements EstablishmentRepository {
             return establishments.filter(establishment => {
                 const distance = this.calculateDistance(lat, lng, establishment.latitue, establishment.longitude);
                 console.log(`Distance from user to establishment ${establishment.id}: ${distance} km`);
-        
+
                 return distance <= radius;
             });
         }

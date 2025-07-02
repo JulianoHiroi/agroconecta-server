@@ -23,7 +23,7 @@ model Establishments {
 FAça a classe CreateEstablishmentRequestDTO que representa o corpo da requisição para criar um estabelecimento
  */
 
-export type CreateEstablishmentRequestDTO = { 
+export type CreateEstablishmentRequestDTO = {
   name: string;
   logradouro: string;
   number: string;
@@ -57,6 +57,7 @@ export type CreateEstablishmentResponseDTO = {
     idTypeProduct: string;
     name: string;
     quantity: number;
+    ratingAvaliation?: number; // Optional field for average rating
   }[];
 };
 
@@ -108,17 +109,17 @@ export type UpdateImageProfileToEstablishmentResponseDTO = {
 
 
 export type SearchEstablishmentsByFilterRequestDTO = {
-    name?: string;
-    idTypeProduct?: string;
-    searchRadius?: number; // in meters
-    lat: number; // latitude of the user's location
-    lng: number; // longitude of the user's location
-    idUser: string;
+  name?: string;
+  idTypeProduct?: string;
+  searchRadius?: number; // in meters
+  lat: number; // latitude of the user's location
+  lng: number; // longitude of the user's location
+  idUser: string;
 };
 
 export type SearchEstablishmentsByFilterResponseDTO = {
-    id: string;
-    name: string;
-    latitue: number;
-    longitude: number;
+  id: string;
+  name: string;
+  latitue: number;
+  longitude: number;
 };

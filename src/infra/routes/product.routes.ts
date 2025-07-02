@@ -1,9 +1,10 @@
 import { Router } from "express";
-import ProductServiceDomain from "../../domain/products/service/implementations/product.domain";
+
 import ProductController from "../controllers/product.controller";
 import { AuthMiddleware } from "../polices/auth/auth.middleware";
 import TokenServiceJWT from "../providers/token/implementations/tokenJWT.service";
 import UserPrismaRepository from "../repositories/implementations/user.prisma.repository";
+import ProductServiceDomain from "../../domain/product/service/implementations/product.domain";
 
 const productController = new ProductController(new ProductServiceDomain());
 
@@ -20,13 +21,19 @@ productRoutes.post(
   productController.createProduct.bind(productController)
 );
 
+productRoutes.post(
+  "/avaliation/:productId",
+  authMiddleware.auth.bind(authMiddleware),
+  productController.makeAvaliation.bind(productController)
+);
+
 productRoutes.get(
   "/types",
   productController.getTypesProducts.bind(productController)
 );
 
 productRoutes.get(
-  "/Establishment/:establishmentId",
+  "//:establishmentId",
   productController.getAllProductsByEstablishmentId.bind(productController)
 );
 productRoutes.get(
@@ -50,7 +57,7 @@ productRoutes.delete(
 );
 
 productRoutes.patch(
-  "/connect/:establishmentId/:productId", 
+  "/connect/:establishmentId/:productId",
   authMiddleware.auth.bind(authMiddleware),
   productController.connectProductToEstablishment.bind(productController)
 );

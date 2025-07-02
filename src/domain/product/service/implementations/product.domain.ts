@@ -10,7 +10,7 @@ import EstablishmentPrismaRepository from "../../../../infra/repositories/implem
 import ConnectProductToEstablishmentUseCase from "../../usecases/connectProductToEstablishment.usecase";
 
 class ProductServiceDomain implements ProductService {
- 
+
   productRepository = new ProductPrismaRepository(); // Assuming you have a ProductRepository similar to the one in the original code
   establishmentRepository = new EstablishmentPrismaRepository(); // Assuming you have an EstablishmentRepository similar to the one in the original code
   createProductUseCase = new CreateProductUseCase(
@@ -31,21 +31,21 @@ class ProductServiceDomain implements ProductService {
 
   connectProductToEstablishmentUseCase = new ConnectProductToEstablishmentUseCase(
     this.productRepository
-  , this.establishmentRepository
+    , this.establishmentRepository
   )
 
-  constructor() {}
+  constructor() { }
 
   async createProduct(
     data: CreateProductDTO
   ): Promise<CreateProductResponseDTO> {
     const project = await this.createProductUseCase.execute({
-     ...data,
+      ...data,
 
     });
     return project;
   }
-  
+
   async getTypesProducts(): Promise<{ id: string; name: string }[]> {
     const typesProducts = await this.productRepository.getAllTypesProducts();
     return typesProducts;
@@ -55,15 +55,15 @@ class ProductServiceDomain implements ProductService {
     data: UpdateProductDTO
   ): Promise<UpdateProductResponseDTO> {
     const updatedProduct = await this.updateProductUseCase.execute
-    ({
-      id: data.id,
-      price: data.price,
-      description: data.description,
-      idTypeProduct: data.idTypeProduct,
-    });
+      ({
+        id: data.id,
+        price: data.price,
+        description: data.description,
+        idTypeProduct: data.idTypeProduct,
+      });
     return updatedProduct;
   }
-  
+
   async getAllProductsByEstablishmentId(
     establishmentId: string
   ): Promise<CreateProductResponseDTO[]> {
@@ -115,6 +115,14 @@ class ProductServiceDomain implements ProductService {
       establishmentId,
       productId
     );
+  }
+
+  async makeAvaliation(
+    productId: string,
+    userId: string,
+    rating: number,
+  ): Promise<void> {
+    await this.productRepository.makeAvaliation(productId, userId, rating);
   }
 }
 export default ProductServiceDomain;

@@ -2,12 +2,14 @@
 import geoLocationGeoCodingService from "../../../../infra/providers/geocoding/implementations/geolocation.geocoding.services";
 import EstablishmentPrismaRepository from "../../../../infra/repositories/implementations/establishment.prisma.repository";
 import UserPrismaRepository from "../../../../infra/repositories/implementations/user.prisma.repository";
-import { ConnectImageToEstablishmentsRequestDTO, ConnectImageToEstablishmentsResponseDTO, CreateEstablishmentRequestDTO, CreateEstablishmentResponseDTO, UpdateEstablishmentRequestDTO } from "../../@types/establishmentsDTO";
+import { ConnectImageToEstablishmentsRequestDTO, ConnectImageToEstablishmentsResponseDTO, CreateEstablishmentRequestDTO, CreateEstablishmentResponseDTO, SearchEstablishmentsByFilterRequestDTO, SearchEstablishmentsByFilterResponseDTO, UpdateEstablishmentRequestDTO, UpdateImageProfileToEstablishmentResponseDTO } from "../../@types/establishmentsDTO";
+import UpdateImageProfileToEstablishmentsUseCase from "../../usecases/updateImageProfileToEstablishments.usecase";
 import CreateEstablishmentUseCase from "../../usecases/createEstablishments.usecase";
 import DeleteEstablishmentUseCase from "../../usecases/deleteEstablishment.usecase";
 import GetAllEstablishmentsByUserIdUseCase from "../../usecases/getAllEstablishmentsByUserId.usecase";
 import UpdateEstablishmentUseCase from "../../usecases/updateEstablishments.usecase";
 import EstablishmentService from "../establishments.service";
+import SearchEstablishmentsByFilterUseCase from "../../usecases/searchEstablishmentsByFilter.usecase";
 
 class EstablishmentServiceDomain implements EstablishmentService {
   establishmentRepository = new EstablishmentPrismaRepository();
@@ -33,6 +35,13 @@ class EstablishmentServiceDomain implements EstablishmentService {
   deleteEstablishmentUseCase = new DeleteEstablishmentUseCase(
     this.establishmentRepository
   )
+
+  updateImageProfileUseCase = new UpdateImageProfileToEstablishmentsUseCase(
+    this.establishmentRepository
+  );
+  searchEstablishmentsByFilterUseCase = new SearchEstablishmentsByFilterUseCase(
+    this.establishmentRepository
+  );
 
   constructor() {}
 
@@ -86,7 +95,22 @@ class EstablishmentServiceDomain implements EstablishmentService {
     const establishment = await this.establishmentRepository.findById(id);
     return establishment;
   }
+  async updateImageProfile(
+    id: string,
+    imageProfileUrl: string
+  ): Promise<UpdateImageProfileToEstablishmentResponseDTO | null> {
+    const establishment = await this.updateImageProfileUseCase.execute(
+      id,
+      imageProfileUrl
+    );
+    return establishment;
+  }
 
-
+  async searchEstablishmentsByFilter(
+    filter: SearchEstablishmentsByFilterRequestDTO
+  ): Promise<SearchEstablishmentsByFilterResponseDTO[]> {
+    const establishments = await this.searchEstablishmentsByFilterUseCase.execute(filter);
+    return establishments;
+  }
 }
 export default EstablishmentServiceDomain;

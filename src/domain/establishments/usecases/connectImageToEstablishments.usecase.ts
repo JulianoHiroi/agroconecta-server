@@ -19,7 +19,7 @@ class ConnectImageToEstablishmentsUseCase {
     if (!data.urlImage) {
       throw new EstablishmentError("invalidData");
     }
-    
+    console.log("Connecting image to establishment with ID:", data.establishmentId, "and URL:", data.urlImage);
     const establishment = await this.establishmentRepository.connectImageToEstablishment(
       {
         establishmentId: data.establishmentId,

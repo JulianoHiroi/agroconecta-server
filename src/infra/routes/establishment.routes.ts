@@ -19,6 +19,7 @@ const establishmentRoutes = Router();
 establishmentRoutes.post(
     "/",
     authMiddleware.auth.bind(authMiddleware),
+    upload.single("image"),
     establishmentController.createEstablishment.bind(establishmentController)
 )
 
@@ -41,9 +42,14 @@ establishmentRoutes.get(
     establishmentController.getAllEstablishmentsByUserId.bind(establishmentController)
 );
 
+establishmentRoutes.post(
+    "/search",
+    authMiddleware.auth.bind(authMiddleware),
+    establishmentController.searchEstablishmentsByFilter.bind(establishmentController)
+)
+
 establishmentRoutes.get(
     "/:id",
-    authMiddleware.auth.bind(authMiddleware),
     establishmentController.findById.bind(establishmentController)
 );
 
@@ -52,6 +58,14 @@ establishmentRoutes.delete(
     authMiddleware.auth.bind(authMiddleware),
     establishmentController.delete.bind(establishmentController)
 );
+
+establishmentRoutes.patch(
+    "/imageProfile/:id",
+    authMiddleware.auth.bind(authMiddleware),
+    upload.single("imageProfile"),
+    establishmentController.updateImageProfile.bind(establishmentController)
+);
+
 
 
 export default establishmentRoutes;

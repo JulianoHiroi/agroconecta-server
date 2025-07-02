@@ -1,4 +1,4 @@
-import { ConnectImageToEstablishmentsRequestDTO, ConnectImageToEstablishmentsResponseDTO, CreateEstablishmentRequestDTO ,CreateEstablishmentResponseDTO, UpdateEstablishmentRequestDTO } from "../@types/establishmentsDTO";
+import { ConnectImageToEstablishmentsRequestDTO, ConnectImageToEstablishmentsResponseDTO, CreateEstablishmentRequestDTO ,CreateEstablishmentResponseDTO, SearchEstablishmentsByFilterRequestDTO, SearchEstablishmentsByFilterResponseDTO, UpdateEstablishmentRequestDTO, UpdateImageProfileToEstablishmentResponseDTO } from "../@types/establishmentsDTO";
 
 abstract class EstablishmentService {
   constructor() {}
@@ -22,5 +22,13 @@ abstract class EstablishmentService {
 
   abstract delete(id: string, userId: string): Promise<void>;
   abstract findById(id: string): Promise<CreateEstablishmentResponseDTO | null>;
+
+  abstract updateImageProfile(
+    id: string,
+    imageProfileUrl: string
+  ): Promise<UpdateImageProfileToEstablishmentResponseDTO | null>;
+
+    abstract searchEstablishmentsByFilter(
+    filter: SearchEstablishmentsByFilterRequestDTO): Promise<SearchEstablishmentsByFilterResponseDTO[]>;
 }
 export default EstablishmentService;

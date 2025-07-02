@@ -13,6 +13,7 @@ type CreateEstablishmentProps= {
   CEP: string;
   phone: string;
   description?: string;
+  imageProfileUrl?: string;
   userId: string;
 };
 type CreateEstablishmentResponse = {
@@ -25,6 +26,7 @@ type CreateEstablishmentResponse = {
   CEP: string;
   phone: string;
   description?: string;
+  imageProfileUrl?: string;
 };
 
 class CreateEstablishmentUseCase {

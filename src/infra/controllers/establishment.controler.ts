@@ -6,6 +6,9 @@ class EstablishmentController {
   constructor(private establishmentService: EstablishmentService) {}
   async createEstablishment(req: AuthRequest, res: Response) {
     const { name, logradouro, number, CEP, phone, description } = req.body;
+
+    const imageProfileUrl = req.file?.filename;
+
     const userId = req.userId;
     if (!userId) throw new Error("invalidToken");
     const data: CreateEstablishmentRequestDTO = {
@@ -16,6 +19,7 @@ class EstablishmentController {
       phone,
       description,
       userId,
+      imageProfileUrl,
     };
     const establishment = await this.establishmentService.createEstablishment(data, userId);
     res.status(201).json(establishment);
@@ -84,6 +88,45 @@ class EstablishmentController {
         if (!establishment) return res.status(404).json({ error: "Establishment not found" });
         return res.status(200).json(establishment);
     }
+
+    async updateImageProfile(req: AuthRequest, res: Response) {
+        const { id } = req.params;
+        const imageProfileUrl = req.file?.filename;
+        if (!imageProfileUrl) return res.status(400).json({ error: "Image file is required" });
+        if (!id) return res.status(400).json({ error: "id is required" });
+        const establishment = await this.establishmentService.updateImageProfile(id, imageProfileUrl);
+        if (!establishment) return res.status(404).json({ error: "Establishment not found" });
+        return res.status(200).json(establishment);
+    }
+    async searchEstablishmentsByFilter(req: AuthRequest, res: Response) {
+   
+        const { lat, lng , idTypeProduct, searchRadius , name} = req.body;
+
+
+        if (!lat || !lng) {
+            return res.status(400).json({ error: "Latitude and longitude are required" });
+        }
+        if(req.userId === undefined) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+        const data = {
+            lat: parseFloat(lat as string),
+            lng: parseFloat(lng as string),
+            idTypeProduct: idTypeProduct ? (idTypeProduct as string) : undefined,
+            searchRadius: searchRadius ? parseInt(searchRadius as string) : undefined,
+            name: name ? (name as string) : undefined,
+            idUser: req.userId, // Assuming you want to include the user ID in the filter
+        };
+        if (isNaN(data.lat) || isNaN(data.lng)) {
+            return res.status(400).json({ error: "Invalid latitude or longitude" });
+        }
+
+
+        const establishments = await this.establishmentService.searchEstablishmentsByFilter(data);
+        return res.status(200).json(establishments);
+    }
+
+
 }
 
 export default EstablishmentController;

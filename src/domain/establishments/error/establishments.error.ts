@@ -1,4 +1,4 @@
-type nameEstablishmentError = "notFound" | "invalidData" | "locationNotFound";
+type nameEstablishmentError = "notFound" | "invalidData" | "locationNotFound" | "alreadyExists" | "connectionFailed";
 
 
 
@@ -17,7 +17,15 @@ const schemaEstablishmentError = {
     statusCode: 404,
     message: "Location not found for the provided address",
   },
-  
+  alreadyExists: {
+    statusCode: 409,
+    message: "Establishment already exists",
+  },
+  connectionFailed: {
+    statusCode: 500,
+    message: "Failed to connect product to establishment",
+  },
+
 };
 class EstablishmentError extends Error {
   public readonly nameError: nameEstablishmentError;

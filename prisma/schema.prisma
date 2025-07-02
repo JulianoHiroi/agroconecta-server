@@ -11,14 +11,17 @@ datasource db {
 }
 
 model User {
-  id             String           @id @default(uuid())
-  email          String           @unique
-  name           String
-  date_of_birth  DateTime
-  gender         String
-  password       String
-  projects       UserProject[]
-  Establishments Establishments[]
+  id                  String           @id @default(uuid())
+  email               String           @unique
+  name                String
+  date_of_birth       DateTime
+  gender              String
+  password            String
+  projects            UserProject[]
+  Establishments      Establishments[]
+  Product             Product[]
+  ordersMade          Order[]          @relation("OrderUserMake")
+  ordersAsProductUser Order[]          @relation("OrderUserProduct")
 }
 
 model Project {
@@ -47,19 +50,23 @@ model RecoveryPasswordCode {
 }
 
 model Establishments {
-  id                   String                 @id @default(uuid())
-  name                 String
-  logradouro           String
-  number               String
-  CEP                  String
+  id                      String                    @id @default(uuid())
+  name                    String
+  logradouro              String
+  number                  String
+  CEP                     String
   // preciso dos dados latitude e longitude que são double
-  latitue              Float                  @default(0)
-  longitude            Float                  @default(0)
-  phone                String
-  description          String?
-  idUser               String
-  user                 User                   @relation(fields: [idUser], references: [id])
-  EstablishmentsImages EstablishmentsImages[]
+  latitue                 Float                     @default(0)
+  longitude               Float                     @default(0)
+  phone                   String
+  description             String?
+  idUser                  String
+  urlImageProfile         String?
+  user                    User                      @relation(fields: [idUser], references: [id])
+  EstablishmentsImages    EstablishmentsImages[]
+  Products                Product[]
+  Establishments_Products Establishments_Products[]
+  Order                   Order[]
 }
 
 model EstablishmentsImages {
@@ -67,4 +74,80 @@ model EstablishmentsImages {
   urlImage        String
   establishmentId String
   establishment   Establishments @relation(fields: [establishmentId], references: [id])
+}
+
+model Product {
+  id                      String                    @id @default(uuid())
+  price                   Float
+  description             String
+  idTypeProduct           String
+  userId                  String
+  user                    User                      @relation(fields: [userId], references: [id])
+  typeProduct             TypeProduct               @relation(fields: [idTypeProduct], references: [id])
+  Establishments_Products Establishments_Products[]
+  Establishments          Establishments?           @relation(fields: [establishmentsId], references: [id])
+  establishmentsId        String?
+  Order                   Order[]
+}
+
+model TypeProduct {
+  id      String    @id @default(uuid())
+  name    String
+  Product Product[]
+}
+
+model Establishments_Products {
+  id              String         @id @default(uuid())
+  establishmentId String
+  productId       String
+  quantity        Int
+  establishment   Establishments @relation(fields: [establishmentId], references: [id])
+  product         Product        @relation(fields: [productId], references: [id])
+  Order           Order[]
+
+  @@unique([establishmentId, productId])
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  // Quem fez o pedido
+  userId String
+  user   User   @relation("OrderUserMake", fields: [userId], references: [id])
+
+  // De quem é o produto
+  userProductId String
+  userProduct   User   @relation("OrderUserProduct", fields: [userProductId], references: [id])
+
+  // Produto e estabelecimento
+  productId              String
+  product                Product                 @relation(fields: [productId], references: [id])
+  EstablishmentId        String
+  Establishment          Establishments          @relation(fields: [EstablishmentId], references: [id])
+  EstablishmentProductId String
+  EstablishmentProduct   Establishments_Products @relation(fields: [EstablishmentProductId], references: [id])
+
+  quantity Int
+  statusId Int         @default(1)
+  status   StatusOrder @relation(fields: [statusId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Payment Payment[]
+}
+
+model StatusOrder {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  Order Order[]
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  amount    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

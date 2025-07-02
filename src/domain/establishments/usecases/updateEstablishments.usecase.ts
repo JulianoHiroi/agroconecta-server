@@ -13,6 +13,7 @@ type UpdateEstablishmentUseCaseRequest = {
         phone?: string;
         description?: string;
         userId?: string;
+        imageProfileUrl?: string;
     };
     userId: string;
 };
@@ -27,6 +28,7 @@ type UpdateEstablishmentUseCaseResponse = {
     CEP: string;
     phone: string;
     description?: string;
+    imageProfileUrl?: string;
 };
 
 class UpdateEstablishmentUseCase {

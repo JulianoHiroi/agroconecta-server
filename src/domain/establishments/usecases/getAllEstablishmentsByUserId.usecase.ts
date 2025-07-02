@@ -6,8 +6,8 @@ type GetAllEstablishmentsByUserIdUseCaseProps = {
 };
 
 type GetAllEstablishmentsByUserIdResponseDTO = {
-  id: string;
-  name: string;
+    id: string;
+    name: string;
     logradouro: string;
     latitue: number;
     longitude: number;
@@ -15,6 +15,11 @@ type GetAllEstablishmentsByUserIdResponseDTO = {
     CEP: string;
     phone: string;
     description?: string;
+    imageProfileUrl?: string;
+    images?: {
+        id: string;
+        url: string;
+    }[]
 } [];
 
 
@@ -38,6 +43,7 @@ class GetAllEstablishmentsByUserIdUseCase {
         logradouro: establishment.logradouro,
         latitue: establishment.latitue,
         longitude: establishment.longitude,
+        imageProfileUrl: establishment.imageProfileUrl ?? undefined,
         number: establishment.number,
         CEP: establishment.CEP,
         phone: establishment.phone,

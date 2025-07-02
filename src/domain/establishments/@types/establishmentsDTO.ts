@@ -33,6 +33,7 @@ export type CreateEstablishmentRequestDTO = {
   phone: string;
   description?: string;
   userId: string;
+  imageProfileUrl?: string;
 };
 export type CreateEstablishmentResponseDTO = {
   id: string;
@@ -44,6 +45,19 @@ export type CreateEstablishmentResponseDTO = {
   CEP: string;
   phone: string;
   description?: string;
+  imageProfileUrl?: string;
+  images?: {
+    id: string;
+    url: string;
+  }[];
+  products?: {
+    id: string;
+    price: number;
+    description: string;
+    idTypeProduct: string;
+    name: string;
+    quantity: number;
+  }[];
 };
 
 export type ConnectImageToEstablishmentsRequestDTO = {
@@ -83,3 +97,28 @@ export type UpdateEstablishmentResponseDTO = {
   description?: string;
 };
 
+export type UpdateImageProfileToEstablishmentRequestDTO = {
+  id: string;
+  imageProfileUrl: string;
+};
+export type UpdateImageProfileToEstablishmentResponseDTO = {
+  id: string;
+  imageProfileUrl: string;
+};
+
+
+export type SearchEstablishmentsByFilterRequestDTO = {
+    name?: string;
+    idTypeProduct?: string;
+    searchRadius?: number; // in meters
+    lat: number; // latitude of the user's location
+    lng: number; // longitude of the user's location
+    idUser: string;
+};
+
+export type SearchEstablishmentsByFilterResponseDTO = {
+    id: string;
+    name: string;
+    latitue: number;
+    longitude: number;
+};
